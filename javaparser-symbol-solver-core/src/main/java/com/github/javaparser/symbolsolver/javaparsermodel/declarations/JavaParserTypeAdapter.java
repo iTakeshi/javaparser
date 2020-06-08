@@ -31,6 +31,7 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.nodeTypes.NodeWithMembers;
 import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.ast.nodeTypes.NodeWithTypeParameters;
+import com.github.javaparser.ast.stmt.LocalClassDeclarationStmt;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.resolution.declarations.ResolvedFieldDeclaration;
 import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclaration;
@@ -161,9 +162,24 @@ public class JavaParserTypeAdapter<T extends Node & NodeWithSimpleName<T> & Node
     public Optional<ResolvedReferenceTypeDeclaration> containerType() {
         return wrappedNode
                 .getParentNode()
-                .map(node -> JavaParserFactory.toTypeDeclaration(node, typeSolver));
+                .map(node -> {
+                    if (node instanceof LocalClassDeclarationStmt) {
+                        Node n = node;
+                        while (n.getParentNode().isPresent()) {
+                            n = n.getParentNode().get();
+                            if (n instanceof ClassOrInterfaceDeclaration ||
+                                    n instanceof TypeParameter ||
+                                    n instanceof EnumDeclaration ||
+                                    n instanceof AnnotationDeclaration)
+                                return JavaParserFactory.toTypeDeclaration(n, typeSolver);
+                        }
+                        throw new IllegalArgumentException("This should not happen");
+                    } else {
+                        return JavaParserFactory.toTypeDeclaration(node, typeSolver);
+                    }
+                });
     }
-    
+
     public List<ResolvedFieldDeclaration> getFieldsForDeclaredVariables() {
         List<ResolvedFieldDeclaration> fields = new ArrayList<>();
         if (wrappedNode.getMembers() != null) {
