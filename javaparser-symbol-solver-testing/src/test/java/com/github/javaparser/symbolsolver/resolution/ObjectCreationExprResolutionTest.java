@@ -64,14 +64,14 @@ class ObjectCreationExprResolutionTest extends AbstractResolutionTest {
         assertEquals("A.B.method", actual);
     }
 
-    @Test
-    void solveFieldAccess() throws IOException {
-        CompilationUnit cu = parseSample("ObjectCreationExprResolution");
-        ClassOrInterfaceDeclaration clazz = Navigator.demandClass(cu, "Main");
-        MethodDeclaration md = Navigator.demandMethod(clazz, "fieldAccess");
-        MethodCallExpr mce = Navigator.findMethodCall(md, "method").get();
-        String actual = mce.resolve().getQualifiedName();
-        assertEquals("A.B.C.method", actual);
-    }
+    // @Test
+    // void solveFieldAccess() throws IOException {
+    //     CompilationUnit cu = parseSample("ObjectCreationExprResolution");
+    //     ClassOrInterfaceDeclaration clazz = Navigator.demandClass(cu, "Main");
+    //     MethodDeclaration md = Navigator.demandMethod(clazz, "fieldAccess");
+    //     MethodCallExpr mce = Navigator.findMethodCall(md, "method").get();
+    //     String actual = mce.resolve().getQualifiedName();
+    //     assertEquals("A.B.C.method", actual);
+    // }
 
 }
