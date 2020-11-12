@@ -156,10 +156,13 @@ public class JavaParserFactory {
                 }
             }
             final Node parentNode = demandParentNode(node);
-            if (parentNode instanceof ObjectCreationExpr
-                    && (node == ((ObjectCreationExpr) parentNode).getType()
-                        || ((ObjectCreationExpr) parentNode).getArguments().contains(node))) {
-                return getContext(demandParentNode(parentNode), typeSolver);
+            if (parentNode instanceof ObjectCreationExpr) {
+                ObjectCreationExpr parentOCE = (ObjectCreationExpr) parentNode;
+                if (node == parentOCE.getType()
+                        || parentOCE.getArguments().contains(node)
+                        || parentOCE.getScope().map((s) -> node == s).orElse(false)) {
+                    return getContext(demandParentNode(parentNode), typeSolver);
+                }
             }
             if (parentNode == null) {
                 throw new IllegalStateException("The AST node does not appear to be inserted in a propert AST, therefore we cannot resolve symbols correctly");

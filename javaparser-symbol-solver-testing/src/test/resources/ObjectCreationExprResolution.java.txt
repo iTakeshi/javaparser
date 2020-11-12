@@ -1,0 +1,23 @@
+public class A {
+    public class B {
+        public class C{
+            public void method() {}
+        }
+        public void method() {}
+    }
+    public B b;
+}
+
+public class Main {
+
+    private Object a;
+
+    public void cast() {
+        ((A) a).new B().method();
+    }
+
+    public void fieldAccess() {
+        a.b.new C().method();
+    }
+
+}
