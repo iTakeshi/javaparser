@@ -101,25 +101,27 @@ public class ClassOrInterfaceDeclarationContext extends AbstractJavaParserContex
 
     @Override
     public SymbolReference<ResolvedTypeDeclaration> solveType(String name) {
+        SymbolReference<ResolvedTypeDeclaration> res = SymbolReference.unsolved(ResolvedTypeDeclaration.class);
+
         if (wrappedNode.getName().getId().equals(name)) {
-            return SymbolReference.solved(JavaParserFacade.get(typeSolver).getTypeDeclaration(wrappedNode));
+            res = SymbolReference.solved(JavaParserFacade.get(typeSolver).getTypeDeclaration(wrappedNode));
         }
 
         for (ClassOrInterfaceType implementedType : wrappedNode.getImplementedTypes()) {
-            if (implementedType.getName().getId().equals(name)) {
-                return JavaParserFactory.getContext(wrappedNode.getParentNode().orElse(null), typeSolver)
+            if (!res.isSolved() && implementedType.getName().getId().equals(name)) {
+                res = JavaParserFactory.getContext(wrappedNode.getParentNode().orElse(null), typeSolver)
                     .solveType(implementedType.getNameWithScope());
             }
         }
 
         for (ClassOrInterfaceType extendedType : wrappedNode.getExtendedTypes()) {
-            if (extendedType.getName().getId().equals(name)) {
-                return JavaParserFactory.getContext(wrappedNode.getParentNode().orElse(null), typeSolver)
+            if (!res.isSolved() && extendedType.getName().getId().equals(name)) {
+                res = JavaParserFactory.getContext(wrappedNode.getParentNode().orElse(null), typeSolver)
                     .solveType(extendedType.getNameWithScope());
             }
         }
 
-        return javaParserTypeDeclarationAdapter.solveType(name);
+        return res.isSolved() ? res : javaParserTypeDeclarationAdapter.solveType(name);
     }
 
     @Override

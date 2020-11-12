@@ -152,11 +152,11 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
                     solveType(name.substring(0, name.indexOf(".")));
                 if (outerMostRef != null && outerMostRef.isSolved() &&
                     outerMostRef.getCorrespondingDeclaration() instanceof JavaParserClassDeclaration) {
-                    ref = ((JavaParserClassDeclaration) outerMostRef.getCorrespondingDeclaration())
+                    ref = ((JavaParserClassDeclaration) outerMostRef.getCorrespondingDeclaration()).getContext()
                         .solveType(name.substring(name.indexOf(".") + 1));
                 } else if (outerMostRef != null && outerMostRef.isSolved() &&
                     outerMostRef.getCorrespondingDeclaration() instanceof JavaParserInterfaceDeclaration) {
-                    ref = ((JavaParserInterfaceDeclaration) outerMostRef.getCorrespondingDeclaration())
+                    ref = ((JavaParserInterfaceDeclaration) outerMostRef.getCorrespondingDeclaration()).getContext()
                         .solveType(name.substring(name.indexOf(".") + 1));
                 }
                 if (ref != null && ref.isSolved()) {

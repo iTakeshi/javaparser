@@ -11,7 +11,7 @@
         <module>javaparser-symbol-solver-testing</module>
     </modules>
 
-    <groupId>com.github.javaparser</groupId>
+    <groupId>net.itakeshi</groupId>
     <artifactId>javaparser-parent</artifactId>
     <packaging>pom</packaging>
     <version>3.16.4-SNAPSHOT</version>
